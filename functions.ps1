@@ -3,6 +3,7 @@
 ###########
 #####################################################################
 . "<YOUR DIR LOCATION>\vCD-NSX\Module\infogathering.ps1"
+. "<YOUR DIR LOCATION>\vCD-NSX\Module\nsx-t.ps1"
 #####################################################################
 
 # Collects credentials, and makes the initial connection to Cloud Director
@@ -547,6 +548,8 @@ function createEdge {
     $info = parseData
     $prefix = $info.Location -replace ".$", "<ENVIORNMENT MARKER>"
 
+    $edgeNode = getEdgeNode
+
     $VdcId = (Get-OrgVdc -Name "$($info.orgName)_VDC")
     $UplinkNetworkId = (Get-ExternalNetwork -Name "$prefix-$($info.orgName)_PGW")
     $UplinkNetworkName = "$prefix-$($info.orgName)_PGW"
@@ -559,7 +562,7 @@ function createEdge {
 
 
     if($($info.Location -eq "PHX")){
-        $edgeClusterName = "<EDGE CLUSTER NAME>"
+        $edgeClusterName = "${edgeNode}"
         $edgeClusterId = "urn:vcloud:edgeCluster:<URN ID>"
         $loc = "phx"
      }
