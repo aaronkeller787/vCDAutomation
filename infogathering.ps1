@@ -17,12 +17,14 @@ function parseData {
             RAM = $d.RAM
             CPU = $d.CPU
             Storage = $d.Storage
+            StoragePolicy = $d.StoragePolicy
             VLAN = $d.VLAN
             Network = $d.Network
             GatewayAddress = $d.GWAddress
             NetMask = $d.NetMask
             FirstUsable = $d.FirstUsable
             LastUsable = $d.LastUsable
+            IsVCCR = $d.IsVCCR
 
         }
         $BuildArray += $BuildData
@@ -52,12 +54,14 @@ function verifyInfo {
         Write-Host "RAM: $($i.RAM)"
         Write-Host "CPU: $($i.CPU)"
         Write-Host "Storage: $($i.Storage)"
+        Write-Host "Storage Policy: $($i.StoragePolicy)"
         Write-Host "VLAN: $($i.VLAN)"
         Write-Host "Network: $($i.Network)"
         Write-Host "Subnet Mask: $($i.NetMask)"
         Write-Host "Gateway Address: $($i.GatewayAddress)"
         Write-Host "First Usable IP: $($i.FirstUsable)"
         Write-Host "Last Usable IP: $($i.LastUsable)"
+         Write-Host "VCCR Deployment: $($i.IsVCCR)"
 
         $response = Read-Host "Is the above correct? (Y/N)"
 
