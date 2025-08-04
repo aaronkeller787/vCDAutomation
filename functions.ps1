@@ -2,8 +2,8 @@
 # Imports #
 ###########
 #####################################################################
-. "<YOUR DIR LOCATION>\vCD-NSX\Module\infogathering.ps1"
-. "<YOUR DIR LOCATION>\vCD-NSX\Module\nsx-t.ps1"
+. "<YOUR DIR LOCATION>\vCD-NSX\Modules\infogathering.ps1"
+. "<YOUR DIR LOCATION>\vCD-NSX\Modules\nsx-t.ps1"
 #####################################################################
 
 # Collects credentials, and makes the initial connection to Cloud Director
@@ -34,7 +34,7 @@ function orgCreation(){
     
     $info = parseData 
 
-    $newOrg = New-Org -Name "$info.orgName" -FullName $info.FullOrgName -Description $info.orgDesc
+    $newOrg = New-Org -Name $info.orgName -FullName $info.FullOrgName -Description $info.orgDesc
     $newOrg = Get-Org $info.orgName
 
     ################
