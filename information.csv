@@ -1,1 +1,1 @@
-Location,FullOrgName,OrgName,Desc,CID,RAM,CPU,Storage,VLAN,Network,GWAddress,NetMask,FirstUsable,LastUsable
+Location,FullOrgName,OrgName,Desc,CID,RAM,CPU,Storage,StoragePolicy,VLAN,Network,GWAddress,NetMask,FirstUsable,LastUsable,isVCCR
