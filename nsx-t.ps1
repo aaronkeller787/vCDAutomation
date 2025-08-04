@@ -1,12 +1,10 @@
 function getEdgeNode {
  
     $NsxManager = "<NSXT MANAGER URL>"
-    $Username   = "<ADMIN USER>"
-    $Password = Read-Host 'Please enter in the admin password for NSXT Manager' -AsSecureString 
     $TargetNodeNames = @("<EDGE NODE NAME>", "<EDGE NODE NAME>")
 
  
-    $pair = "${Username}:${Password}"
+    $pair = "${global:username}@<DOMAIN>:${global:convertedPw}"
     $bytes = [System.Text.Encoding]::UTF8.GetBytes($pair)
     $encodedCreds = [System.Convert]::ToBase64String($bytes)
 
