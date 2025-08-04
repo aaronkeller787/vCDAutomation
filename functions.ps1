@@ -77,15 +77,40 @@ function createOrgVDC {
     $convCPU = $([int]$info.CPU * 1000) * 2
 
     if($info.Location -eq "PHX"){
-        $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
-        $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+
+        if($info.IsVCCR -eq "Y"){
+
+            $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
+            $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+
+        }
+
+        else{
+
+            $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
+            $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+        
+        }
+
     }
     else{
-        $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
-        $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+
+        if($info.IsVCCR -eq "Y"){
+
+            $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
+            $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+        }
+
+        else{
+
+            $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
+            $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+
+        }
+
     }
-    
-    $storageProfileName = $pvdc.StorageProfiles | Where-Object { $_.Name -eq "<STORAGE PROFILE NAME>" }
+
+    $storageProfileName = $pvdc.StorageProfiles | Where-Object { $_.Name -eq $info.StoragePolicy }
     
     $vdc = New-OrgVDC -Name "$($info.OrgName)_VDC" -Description $info.orgDesc -AllocationModelPayAsYouGo -Org $info.OrgName -ProviderVdc $pvdc `
      -VMCpuCoreMHz 2000 -StorageAllocationGB $info.Storage -StorageProfile $storageProfileName
@@ -495,14 +520,41 @@ function ipSpaceUplink{
     }
 
     $info = parseData
-    $prefix = $info.Location -replace ".$", "<ENVIRONMENT MARKER"
+    $prefix = $info.Location -replace ".$", "<ENVIRONMENT MARKER>"
 
-    if($($info.Location) -eq "PHX"){
-        $loc = "phx"
-    }
-    else{
-        $loc = "ash"
-    }
+     if($($info.Location -eq "PHX")){
+
+        if($($info.IsVCCR -eq "Y")){
+            $edgeClusterName = "<EDGE NODE NAME>"
+            $edgeClusterId = "urn:vcloud:edgeCluster:<EDGE CLUSTER ID>"
+            $loc = "phx"
+        }
+        else{
+            $edgeClusterName = "$($edgeNode)"
+            Write-Host $($edgeNode)
+            if($($edgeNode -eq  "<EDGE NODE NAME>")){
+                $edgeClusterId = "urn:vcloud:edgeCluster:<EDGE CLUSTER ID>"
+            }
+            else{
+                $edgeClusterId = "urn:vcloud:edgeCluster:<EDGE CLUSTER ID>"
+            }
+            $loc = "phx"
+        }
+     }
+     else{
+
+        if($(info.IsVCCR -eq "Y")){
+            $edgeClusterName = "<EDGE NODE NAME>"
+            $edgeClusterId = "urn:vcloud:edgeCluster:<EDGE CLUSTER ID>"
+            $loc = "ash"
+
+        }
+        else{
+            $edgeClusterName = "<EDGE NODE NAME>"
+            $edgeClusterId = "urn:vcloud:edgeCluster:<EDGE CLUSTER ID>"
+            $loc = "ash"
+            }
+     }
 
     $payload = @{
         name =  "$prefix-$($info.orgName)_Internet"
