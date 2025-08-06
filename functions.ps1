@@ -8,7 +8,7 @@
 
 # Collects credentials, and makes the initial connection to Cloud Director
 function vCDConnect{
-
+VMware Cloud Director Tutorial & Quick Start Guide
     $global:username = Read-Host 'Please enter in your username'
     $password = Read-Host 'Please enter in your password' -AsSecureString 
     $global:convertedPw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($password))
@@ -82,6 +82,7 @@ function createOrgVDC {
 
             $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
             $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+            $name = "$($info.OrgName)-DR_VDC"
 
         }
 
@@ -89,6 +90,7 @@ function createOrgVDC {
 
             $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
             $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+            $name = "$($info.OrgName)_VDC"
         
         }
 
@@ -99,12 +101,14 @@ function createOrgVDC {
 
             $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
             $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+            $name = "$($info.OrgName)-DR_VDC"
         }
 
         else{
 
             $pvdc = (Get-ProviderVDC -Name "<PROVIDER VDC>")
             $selectedPool = Get-NetworkPool -Name "<NETWORK POOL NAME>"
+            $name = "$($info.OrgName)_VDC"
 
         }
 
@@ -112,10 +116,10 @@ function createOrgVDC {
 
     $storageProfileName = $pvdc.StorageProfiles | Where-Object { $_.Name -eq $info.StoragePolicy }
     
-    $vdc = New-OrgVDC -Name "$($info.OrgName)_VDC" -Description $info.orgDesc -AllocationModelPayAsYouGo -Org $info.OrgName -ProviderVdc $pvdc `
+    $vdc = New-OrgVDC -Name "$($name)" -Description $info.orgDesc -AllocationModelPayAsYouGo -Org $info.OrgName -ProviderVdc $pvdc `
      -VMCpuCoreMHz 2000 -StorageAllocationGB $info.Storage -StorageProfile $storageProfileName
 
-    $vdc = Get-OrgVdc -Name "$($info.OrgName)_VDC"
+    $vdc = Get-OrgVdc -Name "$($name)"
 
     ################
     # VDC Settings #
@@ -602,7 +606,13 @@ function createEdge {
 
     $edgeNode = getEdgeNode
 
-    $VdcId = (Get-OrgVdc -Name "$($info.orgName)_VDC")
+    if($info.IsVCCR -eq "Y"){
+        $VdcId = (Get-OrgVdc -Name "$($info.orgName)-DR_VDC")
+    }
+    else{
+        $VdcId = (Get-OrgVdc -Name "$($info.orgName)_VDC")
+    }
+    
     $UplinkNetworkId = (Get-ExternalNetwork -Name "$prefix-$($info.orgName)_PGW")
     $UplinkNetworkName = "$prefix-$($info.orgName)_PGW"
     $Gateway = "$($info.FirstUsable)"
