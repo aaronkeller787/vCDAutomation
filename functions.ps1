@@ -8,7 +8,7 @@
 
 # Collects credentials, and makes the initial connection to Cloud Director
 function vCDConnect{
-VMware Cloud Director Tutorial & Quick Start Guide
+
     $global:username = Read-Host 'Please enter in your username'
     $password = Read-Host 'Please enter in your password' -AsSecureString 
     $global:convertedPw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($password))
