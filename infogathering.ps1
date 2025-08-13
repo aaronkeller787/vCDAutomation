@@ -3,7 +3,7 @@ function parseData {
 
     $BuildArray = @()
 
-    $filepath = "<YOUR DIR LOCATION>\vCD-NSX\Modules\information.csv"
+    $filepath = "E:\vCD-NSX\Modules\information.csv"
     $data = Import-Csv -Path $filePath
 
     foreach ($d in $data) {
@@ -25,7 +25,8 @@ function parseData {
             FirstUsable = $d.FirstUsable
             LastUsable = $d.LastUsable
             IsVCCR = $d.IsVCCR
-
+            IsBYOF = $d.IsBYOF
+            
         }
         $BuildArray += $BuildData
     }
@@ -61,7 +62,8 @@ function verifyInfo {
         Write-Host "Gateway Address: $($i.GatewayAddress)"
         Write-Host "First Usable IP: $($i.FirstUsable)"
         Write-Host "Last Usable IP: $($i.LastUsable)"
-         Write-Host "VCCR Deployment: $($i.IsVCCR)"
+        Write-Host "VCCR Deployment: $($i.IsVCCR)"
+        Write-Host "BYOF Deployment: $($i.IsBYOF)"
 
         $response = Read-Host "Is the above correct? (Y/N)"
 
@@ -73,8 +75,7 @@ function verifyInfo {
             Write-Host "Please correct the spreadsheet and run this again"
         }
 
+
     }
 
 }
-
-
