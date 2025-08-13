@@ -4,6 +4,7 @@
 #####################################################################
 . "<YOUR DIR LOCATION>\vCD-NSX\Modules\infoGathering.ps1"
 . "<YOUR DIR LOCATION>\vCD-NSX\Modules\functions.ps1"
+. "<YOUR DIR LOCATION>\vCD-NSX\Modules\byof.ps1"
 #####################################################################
 
 $logLocation = '<YOUR DIR LOCATION>'
@@ -19,12 +20,20 @@ Clear-Host
 $validate = parseData
 verifyInfo -DataArray $validate
 
-apiAuth
-createIpSpace
-createNetwork
-getIpSpaceUplinkID
-ipSpaceUplink
-createEdge
-vSphereConn
-tagResourcePool
+if($validate.IsBYOF -ne "Y"){
+    apiAuth
+    createIpSpace
+    createNetwork
+    getIpSpaceUplinkID
+    ipSpaceUplink
+    createEdge
+    vSphereConn
+    tagResourcePool
+}
+else{
+    apiAuth
+    createByof
+    assignDirectNetwork
+}
+
 
