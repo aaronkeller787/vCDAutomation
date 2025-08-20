@@ -710,3 +710,61 @@ function createEdge {
     }
 }
 
+function updateThresholds {
+
+    $info = parseData
+
+    $ContainerName = $info.StorageContainer
+    $YellowMB = 1025
+    $RedMB = 1024
+
+    # Base URLs
+    $baseUrl = "<URL>/cloudapi/1.0.0/storageContainers"
+    $updateUrlBase = "<URL>api/admin/extension/datastore"
+
+    # Headers for GET
+    $headers = @{
+        "Authorization" = "Bearer $global:JWT_Token"
+        "Accept"        = "application/json;version=39.1"
+    }
+
+    # --- Step 1: GET all storage containers (handle pagination) ---
+    $allContainers = @()
+    $page = 1
+    $pageSize = 25
+
+    do {
+        $response = Invoke-RestMethod -Uri $baseUrl"?page=$page&pageSize=$pageSize" -Method GET -Headers $headers
+        $allContainers += $response.values
+        $page++
+    } while ($page -le $response.pageCount)
+
+    $container = $allContainers | Where-Object { $_.name -eq $ContainerName }
+
+    if ($null -eq $container) {
+        Write-Host "No container found with name $ContainerName"
+        return
+    }
+
+    $containerId = $container.id -replace "^urn:vcloud:storagecontainer:", ""
+    Write-Host "Found container ID: $containerId"
+
+    $updateUrl = "$updateUrlBase/$containerId"
+
+    $putHeaders = @{
+        "Authorization" = "Bearer $global:JWT_Token"
+        "Accept"        = "application/*+json;version=40.0.0-alpha"
+        "Content-Type"  = "application/vnd.vmware.admin.datastore+json"
+    }
+
+    $body = @{
+        thresholdYellowGb = [math]::Round($YellowMB / 1024, 4)
+        thresholdRedGb    = [math]::Round($RedMB / 1024, 4)
+    } | ConvertTo-Json
+
+    $response = Invoke-RestMethod -Uri $updateUrl -Method PUT -Headers $putHeaders -Body $body
+
+    Write-Host "Thresholds updated successfully."
+    return $response
+}
+
