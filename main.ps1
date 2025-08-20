@@ -29,11 +29,13 @@ if($validate.IsBYOF -ne "Y"){
     createEdge
     vSphereConn
     tagResourcePool
+    updateThresholds
 }
 else{
     apiAuth
     createByof
     assignDirectNetwork
+    updateThresholds
 }
 
 
